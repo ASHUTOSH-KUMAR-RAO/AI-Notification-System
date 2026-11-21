@@ -32,7 +32,7 @@ export function TextField<T extends FieldValues>({
   const errorId = fieldState.invalid ? `${id}-error` : undefined
 
   return (
-    <Field data-invalid={fieldState.invalid}>
+    <Field data-invalid={fieldState.invalid} className="gap-2.5">
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       {multiline ? (
         <Textarea
@@ -53,7 +53,7 @@ export function TextField<T extends FieldValues>({
             placeholder={placeholder}
             aria-invalid={fieldState.invalid}
             aria-describedby={errorId}
-            className={isPassword ? 'pr-10' : undefined}
+            className={isPassword ? 'pr-12' : undefined}
           />
           {isPassword && (
             <button
@@ -61,7 +61,7 @@ export function TextField<T extends FieldValues>({
               onClick={() => setShown((s) => !s)}
               aria-label={shown ? 'Hide password' : 'Show password'}
               aria-pressed={shown}
-              className="absolute inset-y-0 right-0 flex w-10 items-center justify-center rounded-r-md text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+              className="absolute inset-y-0 right-0 flex w-12 cursor-pointer items-center justify-center rounded-r-xl text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
             >
               {shown ? <EyeOff className="size-4" aria-hidden /> : <Eye className="size-4" aria-hidden />}
             </button>

@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowUpRight, Minus, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { AnimatedNumber } from '@/components/AnimatedNumber'
+import { Stagger } from '@/components/motion/Stagger'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
@@ -46,7 +47,8 @@ interface Props {
 
 export function StatCard({ label, icon: Icon, value, format, trend, footer }: Props) {
   return (
-    <Card className="shadow-soft gap-3 p-4 transition-transform motion-safe:hover:-translate-y-0.5">
+    <Stagger className="min-w-0 *:h-full">
+    <Card className="shadow-soft gap-3 p-4 transition-transform motion-safe:hover:-translate-y-0.5 sm:p-5">
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>{label}</span>
         <Icon className="size-4" aria-hidden />
@@ -59,5 +61,6 @@ export function StatCard({ label, icon: Icon, value, format, trend, footer }: Pr
         {footer}
       </div>
     </Card>
+    </Stagger>
   )
 }

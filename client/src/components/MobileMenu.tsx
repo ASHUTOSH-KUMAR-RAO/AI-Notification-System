@@ -6,10 +6,10 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { useAuth } from '@/context/AuthContext'
 import { cn } from '@/lib/utils'
 
-const linkClass = 'rounded-md px-3 py-2.5 text-base font-medium hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring'
+const linkClass = 'rounded-xl px-4 py-3.5 text-base font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring'
 
 /** Hamburger menu shown under 640px. */
-export function MobileMenu() {
+export function MobileMenu({ side = 'right' }: { side?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
   const { user, logout } = useAuth()
   const close = () => setOpen(false)
@@ -17,9 +17,9 @@ export function MobileMenu() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="ghost" size="icon-sm" aria-label="Open menu" className="md:hidden" />}>
-        <Menu className="size-4" aria-hidden />
+        <Menu className="size-5" aria-hidden />
       </SheetTrigger>
-      <SheetContent side="right" className="w-72">
+      <SheetContent side={side} className="w-[86vw] max-w-sm">
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
           <SheetDescription className="sr-only">Site navigation</SheetDescription>
@@ -54,11 +54,11 @@ export function MobileMenu() {
         </nav>
 
         {user && (
-          <div className="mt-auto space-y-3 border-t p-4">
+          <div className="mt-auto space-y-3 p-4">
             <div className="flex items-center gap-3">
               <span
                 aria-hidden
-                className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
+                className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
               >
                 {user.name.charAt(0).toUpperCase()}
               </span>

@@ -27,14 +27,14 @@ export default function Settings() {
       <section className="space-y-6" aria-busy aria-label="Loading settings">
         <Skeleton className="h-9 w-48" />
         {[0, 1, 2].map((i) => (
-          <Skeleton key={i} className="h-40 w-full rounded-xl" />
+          <Skeleton key={i} className="h-44 w-full rounded-3xl" />
         ))}
       </section>
     )
   }
   if (isError) {
     return (
-      <div role="alert" className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
+      <div role="alert" className="flex flex-col items-center gap-3 glass rounded-3xl border border-dashed py-16 text-center">
         <AlertTriangle className="size-8 text-destructive" aria-hidden />
         <div>
           <p className="font-medium">Couldn't load your settings</p>
@@ -79,7 +79,7 @@ export default function Settings() {
       </div>
 
       {dirty && (
-        <div role="region" aria-label="Unsaved changes" className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 backdrop-blur animate-in slide-in-from-bottom-4 duration-200">
+        <div role="region" aria-label="Unsaved changes" className="glass fixed inset-x-3 bottom-3 z-30 mx-auto max-w-6xl rounded-2xl border shadow-soft animate-in slide-in-from-bottom-4 duration-300 sm:inset-x-6">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
             <p className="text-sm font-medium">You have unsaved changes</p>
             <div className="flex gap-2">

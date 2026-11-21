@@ -7,13 +7,12 @@ import { useAuth } from '@/context/AuthContext'
 export default function NotFound() {
   const { user } = useAuth()
   return (
-    <section className="relative flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden px-4 py-20 text-center">
+    <section className="relative flex flex-1 flex-col items-center justify-center gap-5 px-4 py-20 text-center">
       <Seo title="Page not found" description="The page you are looking for does not exist." />
-      <div aria-hidden className="bg-grid absolute inset-0 -z-10" />
       <span aria-hidden className="float-y flex size-16 items-center justify-center rounded-2xl bg-accent text-primary shadow-soft">
         <Compass className="size-8" />
       </span>
-      <p className="text-gradient text-7xl font-bold tracking-tight">404</p>
+      <p className="text-gradient font-heading text-8xl font-bold tracking-tight">404</p>
       <h1 className="text-2xl font-semibold">This page wandered off</h1>
       <p className="max-w-sm text-muted-foreground">The link may be broken or the page may have moved.</p>
       <Link to={user ? '/dashboard' : '/'} className={buttonVariants()}>

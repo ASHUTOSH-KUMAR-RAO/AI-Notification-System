@@ -32,6 +32,8 @@
 
 ![React](https://img.shields.io/badge/React_19-20232a?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-646cff?logo=vite&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind_v4-06b6d4?logo=tailwindcss&logoColor=white) ![Node](https://img.shields.io/badge/Node.js_22-339933?logo=nodedotjs&logoColor=white) ![Express](https://img.shields.io/badge/Express_5-000000?logo=express) ![Socket.io](https://img.shields.io/badge/Socket.io-010101?logo=socketdotio) ![Prisma](https://img.shields.io/badge/Prisma_7-2d3748?logo=prisma) ![Postgres](https://img.shields.io/badge/Supabase_Postgres-3ecf8e?logo=supabase&logoColor=white) ![Groq](https://img.shields.io/badge/Groq-f55036) ![Resend](https://img.shields.io/badge/Resend-000000) ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel) ![Railway](https://img.shields.io/badge/Railway-0b0d0e?logo=railway)
 
+UI: sea green design system (`#20B2AA` scale, 50-950, light and dark), one global grid background, Framer Motion (page transitions, sidebar, lists), GSAP ScrollTrigger (landing reveals, lazy-loaded), CSS marquee, mobile-first layouts.
+
 React, TanStack Query, shadcn/ui (Base UI), Recharts, React Hook Form + Zod on the client. Express 5, Prisma 7 (`@prisma/adapter-pg`), Zod, node-cron, web-push, React Email on the server.
 
 ## Architecture

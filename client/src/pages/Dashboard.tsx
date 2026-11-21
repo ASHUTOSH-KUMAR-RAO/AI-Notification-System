@@ -8,6 +8,7 @@ import { StatCard } from '@/components/dashboard/StatCard'
 import { CategoryChart, DeliveryChart, EngagementChart, OverTimeChart } from '@/components/dashboard/charts'
 import { SendTestDialog } from '@/components/notifications/SendTestDialog'
 import { PriorityBadge } from '@/components/notifications/PriorityBadge'
+import { Stagger, StaggerGroup } from '@/components/motion/Stagger'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -61,6 +62,7 @@ function Stats({ data }: { data: Overview }) {
 
 function RecentHigh({ items }: { items: Overview['recentHigh'] }) {
   return (
+    <Stagger className="min-w-0 *:h-full">
     <Card className="shadow-soft">
       <CardHeader>
         <CardTitle>Recent high priority</CardTitle>
@@ -70,7 +72,7 @@ function RecentHigh({ items }: { items: Overview['recentHigh'] }) {
         {items.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">Nothing urgent. Nice and quiet.</p>
         ) : (
-          <ul className="divide-y">
+          <ul className="divide-y divide-border/60">
             {items.map((n) => {
               const Icon = CATEGORY_META[n.category].icon
               return (
@@ -98,6 +100,7 @@ function RecentHigh({ items }: { items: Overview['recentHigh'] }) {
         </Link>
       </CardContent>
     </Card>
+    </Stagger>
   )
 }
 
@@ -106,12 +109,12 @@ function DashboardSkeleton() {
     <div className="space-y-6" role="status" aria-label="Loading dashboard">
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {Array.from({ length: 6 }, (_, i) => (
-          <Skeleton key={i} className="h-32 rounded-xl" />
+          <Skeleton key={i} className="h-36 rounded-3xl" />
         ))}
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         {Array.from({ length: 4 }, (_, i) => (
-          <Skeleton key={i} className="h-80 rounded-xl" />
+          <Skeleton key={i} className="h-80 rounded-3xl" />
         ))}
       </div>
     </div>
@@ -167,7 +170,7 @@ export default function Dashboard() {
           </EmptyState>
         </Card>
       ) : (
-        <div className={isFetching ? 'space-y-6 opacity-90 transition-opacity' : 'space-y-6 transition-opacity'} aria-busy={isFetching}>
+        <StaggerGroup className={isFetching ? 'space-y-6 opacity-90 transition-opacity' : 'space-y-6 transition-opacity'} aria-busy={isFetching}>
           <Stats data={data} />
           <OverTimeChart data={data.overTime} />
           <div className="grid gap-4 lg:grid-cols-2">
@@ -176,7 +179,7 @@ export default function Dashboard() {
             <EngagementChart data={data.engagement} />
             <RecentHigh items={data.recentHigh} />
           </div>
-        </div>
+        </StaggerGroup>
       )}
     </div>
   )

@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react'
+import { MotionConfig } from 'framer-motion'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Backdrop } from '@/components/Backdrop'
 import { FullPageLoader } from '@/components/FullPageLoader'
 import { ProtectedRoute, PublicRoute } from '@/components/RouteGuards'
 import { AppShell } from '@/components/shell/AppShell'
@@ -17,9 +19,11 @@ const NotFound = lazy(() => import('@/pages/NotFound'))
 
 export default function App() {
   return (
+    <MotionConfig reducedMotion="user">
     <BrowserRouter>
       <AuthProvider>
         <SocketProvider>
+          <Backdrop />
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">
             Skip to content
           </a>
@@ -45,5 +49,6 @@ export default function App() {
         </SocketProvider>
       </AuthProvider>
     </BrowserRouter>
+    </MotionConfig>
   )
 }

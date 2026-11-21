@@ -1,4 +1,5 @@
 import { AlertTriangle, BellOff, CheckCheck, Layers, Loader2, Search, ShieldAlert, Trash2 } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { Seo } from '@/components/Seo'
 import { CATEGORIES, PRIORITIES, type Category, type NotificationFilters, type Priority } from '@/api/notifications'
@@ -107,7 +108,7 @@ export default function Notifications() {
   return (
     <section className="space-y-6">
       <Seo title="Inbox" description="Your prioritized, AI-sorted notifications." />
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Notifications</h1>
           <p className="text-sm text-muted-foreground">
@@ -139,7 +140,7 @@ export default function Notifications() {
 
       <AiStatusHint />
 
-      <div className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2">
+      <div className="glass flex items-center justify-between gap-3 rounded-2xl border px-4 py-3.5">
         <label htmlFor="group-toggle" className="flex cursor-pointer items-center gap-2 text-sm font-medium">
           <Layers className="size-4 text-muted-foreground" aria-hidden />
           Group similar notifications
@@ -149,9 +150,9 @@ export default function Notifications() {
       </div>
 
       {!groupedMode && (
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto]">
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
         <div className="relative">
-          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+          <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
             type="search"
             value={searchInput}
@@ -161,7 +162,7 @@ export default function Notifications() {
             }}
             placeholder="Search notifications"
             aria-label="Search notifications"
-            className="pl-8"
+            className="pl-11"
           />
         </div>
         <SimpleSelect aria-label="Filter by category" className="w-full sm:w-44" value={category} onChange={withReset(setCategory)} options={categoryOptions} />
@@ -170,7 +171,7 @@ export default function Notifications() {
       )}
 
       {!groupedMode && items.length > 0 && (
-        <div className="flex min-h-8 items-center justify-between gap-2 text-sm">
+        <div className="flex min-h-10 items-center justify-between gap-2 text-sm">
           <label className="flex cursor-pointer items-center gap-2">
             <Checkbox
               checked={allSelected}
@@ -194,12 +195,12 @@ export default function Notifications() {
         <ul className="space-y-3" aria-label="Loading notifications" aria-busy>
           {Array.from({ length: 5 }, (_, i) => (
             <li key={i}>
-              <Skeleton className="h-24 w-full rounded-xl" />
+              <Skeleton className="h-28 w-full rounded-2xl" />
             </li>
           ))}
         </ul>
       ) : query.isError ? (
-        <div role="alert" className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-12 text-center">
+        <div role="alert" className="flex flex-col items-center gap-3 glass rounded-3xl border border-dashed py-12 text-center">
           <AlertTriangle className="size-8 text-destructive" aria-hidden />
           <div>
             <p className="font-medium">Couldn't load notifications</p>
@@ -208,7 +209,7 @@ export default function Notifications() {
           <Button onClick={() => void query.refetch()}>Try again</Button>
         </div>
       ) : items.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed py-16 text-center">
+        <div className="flex flex-col items-center gap-2 glass rounded-3xl border border-dashed py-16 text-center">
           <BellOff className="size-8 text-muted-foreground" aria-hidden />
           <p className="font-medium">{tab === 'spam' && !search && category === 'ALL' && priority === 'ALL' ? 'No spam' : hasFilters ? 'No notifications match your filters' : 'No notifications yet'}</p>
           <p className="text-sm text-muted-foreground">
@@ -218,6 +219,7 @@ export default function Notifications() {
       ) : (
         <>
           <ul className="space-y-3">
+            <AnimatePresence initial={false}>
             {items.map((n) => (
               <NotificationItem
                 key={n.id}
@@ -227,6 +229,7 @@ export default function Notifications() {
                 {...actions}
               />
             ))}
+            </AnimatePresence>
           </ul>
           {query.isFetchNextPageError && (
             <p role="alert" className="text-center text-sm text-destructive">

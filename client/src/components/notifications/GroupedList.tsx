@@ -10,7 +10,7 @@ import { timeAgo } from '@/lib/time'
 
 function GroupCard({ group, actions }: { group: NotificationGroup; actions: ItemActions }) {
   return (
-    <li className="rounded-xl border bg-card animate-in fade-in duration-300">
+    <li className="glass rounded-2xl border animate-in fade-in duration-300">
       <Collapsible>
         <CollapsibleTrigger
           render={
@@ -37,7 +37,7 @@ function GroupCard({ group, actions }: { group: NotificationGroup; actions: Item
           <ChevronDown className="mt-2 size-4 shrink-0 text-muted-foreground transition-transform group-data-[panel-open]:rotate-180" aria-hidden />
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <ul className="space-y-2 border-t p-3 sm:p-4">
+          <ul className="space-y-2 p-3 sm:p-4">
             {group.items.map((n) => (
               <NotificationItem key={n.id} notification={n} {...actions} />
             ))}

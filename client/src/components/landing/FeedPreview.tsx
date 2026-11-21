@@ -1,8 +1,10 @@
-import { Sparkles } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { MailCheck, ShieldAlert, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Category, Priority } from '@/api/notifications'
 import { Badge } from '@/components/ui/badge'
 import { CATEGORY_META, PRIORITY_META } from '@/lib/notificationMeta'
+import { cn } from '@/lib/utils'
 
 interface Sample {
   title: string
@@ -22,36 +24,45 @@ const SAMPLES: Sample[] = [
 ]
 
 const VISIBLE = 4
-const prefersReduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /** Self-playing, fake-live notification feed for the hero. Static when reduced motion is requested. */
-export function FeedPreview() {
+export function FeedPreview({ className }: { className?: string }) {
   const [tick, setTick] = useState(VISIBLE)
+  const reduce = useReducedMotion()
 
   useEffect(() => {
-    if (prefersReduced()) return
+    if (reduce) return
     const id = setInterval(() => setTick((t) => t + 1), 2600)
     return () => clearInterval(id)
-  }, [])
+  }, [reduce])
 
   const items = Array.from({ length: VISIBLE }, (_, i) => ({ n: tick - i, s: SAMPLES[(tick - i) % SAMPLES.length] }))
 
   return (
-    <div className="relative mx-auto w-full max-w-md" role="img" aria-label="Preview of the Notify inbox: notifications arrive, get a priority from the AI and are sorted automatically.">
-      <div aria-hidden className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-primary/20 via-chart-5/15 to-chart-4/20 blur-2xl" />
-      <div aria-hidden className="float-y relative rounded-2xl border bg-card p-3 shadow-soft">
-        <div className="mb-2 flex items-center justify-between px-1 text-xs text-muted-foreground">
+    <div className={cn('relative mx-auto w-full max-w-md', className)} role="img" aria-label="Preview of the Notify inbox: notifications arrive, get a priority from the AI and are sorted automatically.">
+      <div aria-hidden className="absolute -inset-3 -z-10 sm:-inset-6 rounded-[2rem] bg-gradient-to-tr from-sea-500/25 via-aqua/10 to-sea-300/20 blur-2xl" />
+      <div aria-hidden className="float-y relative rounded-3xl border glass p-3 shadow-soft sm:p-4">
+        <div className="mb-3 flex items-center justify-between px-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5 font-medium text-foreground">
             <span className="size-2 rounded-full bg-success motion-safe:animate-pulse" />
             Live inbox
           </span>
           <span>Sorted by AI</span>
         </div>
-        <ul className="space-y-2">
+        <ul className="space-y-2.5">
+          <AnimatePresence initial={false} mode="popLayout">
           {items.map(({ n, s }, i) => {
             const Icon = CATEGORY_META[s.category].icon
             return (
-              <li key={n} className={`${i === 0 ? 'feed-in' : ''} flex gap-3 rounded-xl border p-3 ${i === 0 ? 'bg-accent/60' : 'bg-card'}`}>
+              <motion.li
+                key={n}
+                layout={!reduce}
+                initial={reduce ? false : { opacity: 0, y: -18, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={reduce ? undefined : { opacity: 0, scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                className={`flex gap-3 rounded-2xl border p-3 ${i === 0 ? 'bg-accent/70' : 'bg-card/70'}`}
+              >
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
                   <Icon className="size-4" />
                 </span>
@@ -66,12 +77,19 @@ export function FeedPreview() {
                   <p className="truncate text-xs text-muted-foreground">{s.message}</p>
                   <p className="mt-1 text-[11px] text-primary">AI: {s.reason}</p>
                 </div>
-              </li>
+              </motion.li>
             )
           })}
+          </AnimatePresence>
         </ul>
-        <div className="pointer-events-none absolute inset-x-3 bottom-3 h-16 rounded-b-xl bg-gradient-to-t from-card to-transparent" />
+        <div className="pointer-events-none absolute inset-x-3 bottom-3 h-16 rounded-b-2xl bg-gradient-to-t from-background/70 to-transparent" />
       </div>
+      <span aria-hidden className="float-y glass absolute -top-4 -right-2 hidden items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium shadow-soft sm:flex" style={{ animationDelay: '-2s' }}>
+        <ShieldAlert className="size-3.5 text-destructive" /> Spam blocked
+      </span>
+      <span aria-hidden className="float-y glass absolute -bottom-4 -left-3 hidden items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium shadow-soft sm:flex" style={{ animationDelay: '-4s' }}>
+        <MailCheck className="size-3.5 text-primary" /> Email delivered
+      </span>
     </div>
   )
 }

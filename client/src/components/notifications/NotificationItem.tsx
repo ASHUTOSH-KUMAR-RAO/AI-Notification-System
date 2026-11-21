@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Check, ExternalLink, MoreHorizontal, ShieldCheck, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import type { Feedback, Notification } from '@/api/notifications'
@@ -34,10 +35,15 @@ export function NotificationItem({ notification: n, selected = false, onSelect, 
   const aiSummary = n.aiStatus === 'DONE' && n.summary && n.message.length > 160 ? n.summary : null
 
   return (
-    <li
+    <motion.li
+      layout="position"
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, x: 48, transition: { duration: 0.2 } }}
+      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
       className={cn(
-        'flex gap-3 rounded-xl border p-3 transition-colors animate-in fade-in slide-in-from-top-1 duration-300 sm:p-4',
-        n.isRead || n.isSpam ? 'bg-card' : 'border-l-4 border-l-primary bg-muted/40',
+        'glass flex gap-3 rounded-2xl border p-3.5 transition-colors sm:p-5',
+        !(n.isRead || n.isSpam) && 'border-l-4 border-l-primary',
         selected && 'ring-2 ring-ring/50',
       )}
     >
@@ -141,7 +147,7 @@ export function NotificationItem({ notification: n, selected = false, onSelect, 
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </li>
+    </motion.li>
   )
 }
 

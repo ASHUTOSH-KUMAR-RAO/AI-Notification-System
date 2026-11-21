@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { Overview } from '@/api/analytics'
 import { PRIORITIES } from '@/api/notifications'
+import { Stagger } from '@/components/motion/Stagger'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { pct } from '@/lib/format'
 import { CATEGORY_META, PRIORITY_META } from '@/lib/notificationMeta'
@@ -13,6 +14,7 @@ const CHANNEL_LABEL = { IN_APP: 'In-app', EMAIL: 'Email', PUSH: 'Push' } as cons
 
 function ChartCard({ title, description, summary, children }: { title: string; description: string; summary: string; children: ReactNode }) {
   return (
+    <Stagger className="min-w-0 *:h-full">
     <Card className="shadow-soft">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
@@ -24,6 +26,7 @@ function ChartCard({ title, description, summary, children }: { title: string; d
         </div>
       </CardContent>
     </Card>
+    </Stagger>
   )
 }
 
@@ -38,7 +41,7 @@ interface TipProps {
 function Tip({ active, label, payload, formatValue, formatLabel }: TipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="rounded-lg border bg-popover px-3 py-2 text-xs text-popover-foreground shadow-md">
+    <div className="rounded-xl border bg-popover px-3.5 py-2.5 text-xs text-popover-foreground shadow-md">
       {label != null && <p className="mb-1 font-medium">{formatLabel ? formatLabel(String(label)) : label}</p>}
       {payload.map((p) => (
         <p key={String(p.dataKey ?? p.name)} className="flex items-center gap-2">
