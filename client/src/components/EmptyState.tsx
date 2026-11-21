@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 export function EmptyState({ icon: Icon, title, description, children, className }: { icon: LucideIcon; title: string; description: string; children?: ReactNode; className?: string }) {
   return (
     <div className={cn('flex flex-col items-center gap-3 px-4 py-12 text-center', className)}>
-      <span aria-hidden className="relative flex size-16 items-center justify-center rounded-full bg-accent text-primary">
+      <span aria-hidden className="relative flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
         <span className="absolute inset-0 rounded-full ring-8 ring-accent/50" />
         <Icon className="relative size-7" />
       </span>

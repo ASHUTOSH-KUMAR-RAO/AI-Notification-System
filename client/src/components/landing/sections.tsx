@@ -1,7 +1,6 @@
 import { Atom, BellRing, Database, Gem, Layers, Moon, Plug, Server, ShieldCheck, Sparkles, Sprout, Waypoints, Zap, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Logo } from '@/components/Logo'
 import { Marquee } from '@/components/motion/Marquee'
 import { TiltCard } from '@/components/motion/TiltCard'
 import { buttonVariants } from '@/components/ui/button'
@@ -56,7 +55,7 @@ export function Features() {
       <div data-stagger className="mt-10 grid gap-4 sm:mt-14 md:grid-cols-4">
         {FEATURES.map(({ icon: Icon, title, text, className, visual }) => (
           <TiltCard key={title} data-reveal className={cn('glass rounded-3xl border p-6 shadow-soft sm:p-7', className ?? 'md:col-span-1')}>
-            <span aria-hidden className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-accent text-primary">
+            <span aria-hidden className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Icon className="size-6" />
             </span>
             <h3 className="text-lg font-semibold">{title}</h3>
@@ -131,10 +130,10 @@ export function TechStack() {
         <SectionHead eyebrow="Built with" title="A modern, boring-in-a-good-way stack" />
       </div>
       <div data-reveal className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
-        <Marquee label="Technologies used" duration={38}>
+        <Marquee label="Technologies used" duration={45}>
           {STACK.map(({ icon: Icon, name, role }) => (
-            <div key={name} className="glass flex shrink-0 items-center gap-3 rounded-2xl border px-5 py-4 shadow-soft">
-              <span aria-hidden className="flex size-11 items-center justify-center rounded-xl bg-accent text-primary">
+            <div key={name} className="flex shrink-0 items-center gap-3 rounded-2xl border bg-card/80 px-5 py-4 shadow-soft">
+              <span aria-hidden className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Icon className="size-5" />
               </span>
               <div>
@@ -144,10 +143,10 @@ export function TechStack() {
             </div>
           ))}
         </Marquee>
-        <Marquee label="Example notifications" duration={50} reverse>
+        <Marquee label="Example notifications" duration={60}>
           {TICKER.map((t) => (
-            <span key={t} className="glass shrink-0 rounded-full border px-5 py-2.5 text-sm whitespace-nowrap text-muted-foreground">
-              <span aria-hidden className="mr-2 inline-block size-1.5 rounded-full bg-brand" />
+            <span key={t} className="shrink-0 rounded-full border bg-card/80 px-5 py-2.5 text-sm whitespace-nowrap text-muted-foreground">
+              <span aria-hidden className="mr-2 inline-block size-1.5 rounded-full bg-muted-foreground" />
               {t}
             </span>
           ))}
@@ -171,21 +170,5 @@ export function FinalCta({ signedIn }: { signedIn: boolean }) {
         </div>
       </div>
     </section>
-  )
-}
-
-export function Footer() {
-  return (
-    <footer>
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 py-10 text-sm text-muted-foreground sm:flex-row sm:px-6">
-        <Logo />
-        <p>
-          Made by Avishka ·{' '}
-          <a href="https://github.com/ASHUTOSH-KUMAR-RAO/AI-Notification-System" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground underline-offset-4 hover:underline">
-            GitHub
-          </a>
-        </p>
-      </div>
-    </footer>
   )
 }

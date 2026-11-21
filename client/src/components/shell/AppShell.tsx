@@ -26,14 +26,14 @@ function NavItem({ to, label, icon: Icon, collapsed, badge }: { to: string; labe
       aria-label={collapsed ? label : undefined}
       className={({ isActive }) =>
         cn(
-          'relative flex h-12 items-center gap-3 rounded-xl px-[1.05rem] text-sm font-medium transition-colors',
-          isActive ? 'text-accent-foreground' : 'text-muted-foreground hover:text-foreground',
+          'relative isolate flex h-12 items-center gap-3 rounded-xl px-[1.05rem] text-sm font-medium transition-colors',
+          isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
         )
       }
     >
       {({ isActive }) => (
         <>
-          {isActive && <motion.span layoutId="nav-active" aria-hidden className="absolute inset-0 -z-10 rounded-xl border bg-accent shadow-soft" transition={{ type: 'spring', stiffness: 420, damping: 36 }} />}
+          {isActive && <motion.span layoutId="nav-active" aria-hidden className="absolute inset-0 -z-10 rounded-xl border border-primary/25 bg-primary/10" transition={{ type: 'spring', stiffness: 420, damping: 36 }} />}
           <span className="relative shrink-0">
             <Icon className="size-5" aria-hidden />
             {collapsed && badge > 0 && <span aria-label={`${badge} unread`} className="absolute -top-1 -right-1 size-2.5 rounded-full bg-primary ring-2 ring-background" />}
@@ -69,7 +69,7 @@ function Sidebar() {
       className="sticky top-0 hidden h-dvh shrink-0 p-3 md:block"
     >
       <TooltipProvider>
-        <div className="glass flex h-full flex-col gap-6 overflow-hidden rounded-2xl border p-3 shadow-soft">
+        <div className="grid-surface flex h-full flex-col gap-6 overflow-hidden rounded-2xl border p-3 shadow-soft">
           <Logo to="/dashboard" compact={collapsed} className="h-12 px-1.5" />
           <nav aria-label="Main" id="app-sidebar" className="flex flex-col gap-1.5">
             {APP_NAV.map((item) => (

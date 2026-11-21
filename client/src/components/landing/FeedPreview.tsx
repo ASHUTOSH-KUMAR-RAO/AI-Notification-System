@@ -40,7 +40,7 @@ export function FeedPreview({ className }: { className?: string }) {
 
   return (
     <div className={cn('relative mx-auto w-full max-w-md', className)} role="img" aria-label="Preview of the Notify inbox: notifications arrive, get a priority from the AI and are sorted automatically.">
-      <div aria-hidden className="absolute -inset-3 -z-10 sm:-inset-6 rounded-[2rem] bg-gradient-to-tr from-sea-500/25 via-aqua/10 to-sea-300/20 blur-2xl" />
+      <div aria-hidden className="absolute -inset-3 -z-10 sm:-inset-6 rounded-[2rem] bg-foreground/5 blur-2xl" />
       <div aria-hidden className="float-y relative rounded-3xl border glass p-3 shadow-soft sm:p-4">
         <div className="mb-3 flex items-center justify-between px-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5 font-medium text-foreground">
@@ -61,7 +61,7 @@ export function FeedPreview({ className }: { className?: string }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={reduce ? undefined : { opacity: 0, scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                className={`flex gap-3 rounded-2xl border p-3 ${i === 0 ? 'bg-accent/70' : 'bg-card/70'}`}
+                className={`flex gap-3 rounded-2xl border p-3 ${i === 0 ? 'bg-muted/70' : 'bg-card/70'}`}
               >
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
                   <Icon className="size-4" />

@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Seo } from '@/components/Seo'
 import { FeedPreview } from '@/components/landing/FeedPreview'
-import { Features, FinalCta, Footer, HowItWorks, TechStack } from '@/components/landing/sections'
+import { Features, FinalCta, HowItWorks, TechStack } from '@/components/landing/sections'
 import { RevealWords } from '@/components/motion/RevealWords'
 import { buttonVariants } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
@@ -60,7 +60,6 @@ export default function Home() {
       <HowItWorks />
       <TechStack />
       <FinalCta signedIn={!!user} />
-      <Footer />
     </div>
   )
 }

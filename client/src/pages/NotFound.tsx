@@ -9,7 +9,7 @@ export default function NotFound() {
   return (
     <section className="relative flex flex-1 flex-col items-center justify-center gap-5 px-4 py-20 text-center">
       <Seo title="Page not found" description="The page you are looking for does not exist." />
-      <span aria-hidden className="float-y flex size-16 items-center justify-center rounded-2xl bg-accent text-primary shadow-soft">
+      <span aria-hidden className="float-y flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-soft">
         <Compass className="size-8" />
       </span>
       <p className="text-gradient font-heading text-8xl font-bold tracking-tight">404</p>

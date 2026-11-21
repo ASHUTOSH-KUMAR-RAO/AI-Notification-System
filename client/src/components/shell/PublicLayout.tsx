@@ -3,6 +3,7 @@ import { Logo } from '@/components/Logo'
 import { MobileMenu } from '@/components/MobileMenu'
 import { PageTransition } from '@/components/motion/PageTransition'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { Footer } from '@/components/shell/Footer'
 import { buttonVariants } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
 
@@ -48,6 +49,7 @@ export function PublicLayout() {
       <main id="main" className="flex flex-1 flex-col">
         <PageTransition className="flex flex-1 flex-col" />
       </main>
+      {!isAuth && <Footer />}
     </div>
   )
 }
