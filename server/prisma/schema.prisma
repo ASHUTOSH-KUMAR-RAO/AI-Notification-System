@@ -1,0 +1,243 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String              @id @default(uuid()) @db.Uuid
+  name               String
+  email              String              @unique
+  password           String
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  refreshTokens      RefreshToken[]
+  notifications      Notification[]
+  notificationGroups NotificationGroup[]
+  userPreference     UserPreference?
+  pushSubscriptions  PushSubscription[]
+  digestRuns         DigestRun[]
+  engagementScores   EngagementScore[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  tokenHash String   @unique
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum NotificationCategory {
+  SYSTEM
+  ORDER
+  SECURITY
+  SOCIAL
+  PROMOTION
+  REMINDER
+}
+
+enum NotificationPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model Notification {
+  id        String               @id @default(uuid()) @db.Uuid
+  userId    String               @db.Uuid
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  category  NotificationCategory @default(SYSTEM)
+  priority  NotificationPriority @default(MEDIUM)
+  isRead    Boolean              @default(false)
+  readAt    DateTime?
+  metadata  Json?
+  actionUrl String?
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  deletedAt DateTime?
+
+  // --- Phase 5: AI ---
+  aiStatus          AiStatus  @default(DONE)
+  aiPriorityReason  String?
+  prioritySetByUser Boolean   @default(false) // true: priority was chosen by the user and AI never overrides it
+  categorySetByUser Boolean   @default(false)
+  isSpam            Boolean   @default(false)
+  spamScore         Float?
+  spamReviewed      Boolean   @default(false) // user pressed Not spam: never re-flag
+  summary           String?
+  groupKey          String? // notifications sharing a key belong to one group
+  analyzedAt        DateTime?
+
+  // --- Phase 6: personalization ---
+  aiPriority             NotificationPriority? // what the AI/rules chose, before personalization
+  personalizationReason  String? // e.g. "You usually open ORDER updates quickly"
+  feedback               FeedbackValue?
+  notificationDeliveries NotificationDelivery[]
+  notificationEvents     NotificationEvent[]
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead])
+  @@index([userId, groupKey])
+}
+
+enum AiStatus {
+  PENDING
+  DONE
+  FALLBACK
+  FAILED
+}
+
+/// Cached AI summary of a notification group; regenerated only when `signature` (hash of member ids) changes.
+model NotificationGroup {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupKey  String
+  summary   String
+  signature String
+  source    String // 'AI' | 'FALLBACK'
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, groupKey])
+}
+
+// ===================== Phase 6: smart features =====================
+
+enum FeedbackValue {
+  IMPORTANT
+  NOT_IMPORTANT
+}
+
+enum DeliveryChannel {
+  IN_APP
+  EMAIL
+  PUSH
+}
+
+enum DeliveryStatus {
+  PENDING
+  HELD // waiting for quiet hours to end
+  SENT
+  FAILED
+  SKIPPED
+}
+
+enum EventType {
+  OPENED
+  CLICKED
+  DISMISSED
+}
+
+/// One row per user, created with defaults on first access.
+model UserPreference {
+  id                String               @id @default(uuid()) @db.Uuid
+  userId            String               @unique @db.Uuid
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// { SYSTEM: { enabled, channels: { inApp, email, push } }, ... } - validated by zod in the service.
+  categories        Json
+  minAlertPriority  NotificationPriority @default(LOW) // minimum priority for toasts and push
+  quietHoursEnabled Boolean              @default(false)
+  quietStart        String               @default("22:00") // HH:mm in `timeZone`
+  quietEnd          String               @default("07:00")
+  timeZone          String               @default("UTC") // IANA, e.g. Asia/Kolkata
+  quietAllowHigh    Boolean              @default(true)
+  digestEnabled     Boolean              @default(false)
+  digestTime        String               @default("08:00") // HH:mm in `timeZone`
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  @@index([digestEnabled])
+}
+
+model PushSubscription {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+
+  @@index([userId])
+}
+
+/// Outbound delivery attempts (email/push) and in-app alerts. Unique per notification+channel => idempotent.
+model NotificationDelivery {
+  id             String          @id @default(uuid()) @db.Uuid
+  notificationId String          @db.Uuid
+  notification   Notification    @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  userId         String          @db.Uuid
+  channel        DeliveryChannel
+  status         DeliveryStatus
+  attempts       Int             @default(0)
+  nextAttemptAt  DateTime? // when a HELD/PENDING row is due
+  error          String?
+  sentAt         DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@unique([notificationId, channel])
+  @@index([status, nextAttemptAt])
+}
+
+/// One row per user per local calendar day: the unique key is what makes digests idempotent.
+model DigestRun {
+  id            String         @id @default(uuid()) @db.Uuid
+  userId        String         @db.Uuid
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  localDate     String // YYYY-MM-DD in the user's time zone
+  status        DeliveryStatus
+  attempts      Int            @default(0)
+  itemCount     Int            @default(0)
+  error         String?
+  nextAttemptAt DateTime? // when a FAILED run may be retried, or when a crashed PENDING run's lease expires
+  sentAt        DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([userId, localDate])
+}
+
+/// Own-app behaviour only: opened / clicked / dismissed. At most one of each type per notification.
+model NotificationEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  userId         String       @db.Uuid
+  notificationId String       @db.Uuid
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  type           EventType
+  timeToOpenMs   Int?
+  createdAt      DateTime     @default(now())
+
+  @@unique([notificationId, type])
+  @@index([userId, createdAt])
+}
+
+model EngagementScore {
+  userId       String               @db.Uuid
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     NotificationCategory
+  score        Float // 0..1
+  samples      Int
+  medianOpenMs Int?
+  updatedAt    DateTime             @updatedAt
+
+  @@id([userId, category])
+}
+
+/// Lease-based lock so only one server instance runs a scheduled job at a time (works behind pgbouncer).
+model JobLock {
+  name        String   @id
+  lockedUntil DateTime
+  lockedBy    String
+}
