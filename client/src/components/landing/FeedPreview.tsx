@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useMotionScale } from '@/lib/motion'
 import { MailCheck, ShieldAlert, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Category, Priority } from '@/api/notifications'
@@ -25,14 +26,14 @@ const SAMPLES: Sample[] = [
 
 const VISIBLE = 4
 
-/** Self-playing, fake-live notification feed for the hero. Static when reduced motion is requested. */
+/** Self-playing, fake-live notification feed for the hero. Slower and shorter-travel under reduced motion. */
 export function FeedPreview({ className }: { className?: string }) {
   const [tick, setTick] = useState(VISIBLE)
   const reduce = useReducedMotion()
+  const k = useMotionScale()
 
   useEffect(() => {
-    if (reduce) return
-    const id = setInterval(() => setTick((t) => t + 1), 2600)
+    const id = setInterval(() => setTick((t) => t + 1), reduce ? 3800 : 2600)
     return () => clearInterval(id)
   }, [reduce])
 
@@ -44,7 +45,7 @@ export function FeedPreview({ className }: { className?: string }) {
       <div aria-hidden className="float-y relative rounded-3xl border glass p-3 shadow-soft sm:p-4">
         <div className="mb-3 flex items-center justify-between px-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5 font-medium text-foreground">
-            <span className="size-2 rounded-full bg-success motion-safe:animate-pulse" />
+            <span className="size-2 rounded-full bg-success animate-pulse" />
             Live inbox
           </span>
           <span>Sorted by AI</span>
@@ -56,10 +57,10 @@ export function FeedPreview({ className }: { className?: string }) {
             return (
               <motion.li
                 key={n}
-                layout={!reduce}
-                initial={reduce ? false : { opacity: 0, y: -18, scale: 0.97 }}
+                layout
+                initial={{ opacity: 0, y: -18 * k, scale: 1 - 0.03 * k }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={reduce ? undefined : { opacity: 0, scale: 0.95 }}
+                exit={{ opacity: 0, scale: 1 - 0.05 * k }}
                 transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                 className={`flex gap-3 rounded-2xl border p-3 ${i === 0 ? 'bg-muted/70' : 'bg-card/70'}`}
               >

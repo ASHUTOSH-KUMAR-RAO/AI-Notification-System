@@ -24,7 +24,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'))
 
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="never">
     <BrowserRouter>
       <AuthProvider>
         <SocketProvider>

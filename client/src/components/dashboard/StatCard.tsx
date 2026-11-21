@@ -48,7 +48,7 @@ interface Props {
 export function StatCard({ label, icon: Icon, value, format, trend, footer }: Props) {
   return (
     <Stagger className="min-w-0 *:h-full">
-    <Card className="shadow-soft gap-3 p-4 transition-transform motion-safe:hover:-translate-y-0.5 sm:p-5">
+    <Card className="shadow-soft gap-3 p-4 transition-transform hover:-translate-y-0.5 sm:p-5">
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>{label}</span>
         <Icon className="size-4" aria-hidden />

@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-/** Counts up from the previous value to `value`. Shows the final value immediately with reduced motion. */
+/** Counts up from the previous value to `value`. Always animates (reduced motion only shortens it). */
 export function AnimatedNumber({ value, format = (n) => Math.round(n).toLocaleString(), duration = 800 }: { value: number; format?: (n: number) => string; duration?: number }) {
   const [shown, setShown] = useState(value)
   const from = useRef(0)
@@ -11,7 +9,7 @@ export function AnimatedNumber({ value, format = (n) => Math.round(n).toLocaleSt
   useEffect(() => {
     const start = first.current ? 0 : from.current
     first.current = false
-    if (reduced() || start === value) {
+    if (start === value) {
       from.current = value
       setShown(value)
       return

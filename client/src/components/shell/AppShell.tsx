@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { ConnectionStatus } from '@/components/ConnectionStatus'
@@ -13,6 +13,7 @@ import { UserMenu } from '@/components/shell/UserMenu'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useUnreadCount } from '@/hooks/useNotifications'
+import { useScrolled } from '@/hooks/useScrolled'
 import { useSidebarCollapsed } from '@/lib/useSidebar'
 import { cn } from '@/lib/utils'
 
@@ -60,12 +61,11 @@ function NavItem({ to, label, icon: Icon, collapsed, badge }: { to: string; labe
 function Sidebar() {
   const { data: unread = 0 } = useUnreadCount()
   const [collapsed, toggle] = useSidebarCollapsed()
-  const reduce = useReducedMotion()
   return (
     <motion.aside
       initial={false}
       animate={{ width: collapsed ? COLLAPSED : EXPANDED }}
-      transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 360, damping: 34 }}
+      transition={{ type: 'spring', stiffness: 360, damping: 34 }}
       className="sticky top-0 hidden h-dvh shrink-0 p-3 md:block"
     >
       <TooltipProvider>
@@ -96,11 +96,12 @@ function Sidebar() {
 
 /** Signed-in layout: collapsible sidebar on desktop, drawer on mobile, glass top bar with live status, bell and user menu. */
 export function AppShell() {
+  const scrolled = useScrolled()
   return (
     <div className="flex min-h-dvh">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="glass-bar sticky top-0 z-40 flex h-16 items-center justify-between gap-2 px-4 sm:px-6">
+        <header data-scrolled={scrolled} className="glass-bar sticky top-0 z-40 flex h-16 items-center justify-between gap-2 px-4 sm:px-6">
           <div className="flex items-center gap-1 md:hidden">
             <MobileMenu side="left" />
             <Logo to="/dashboard" compact className="ml-1" />

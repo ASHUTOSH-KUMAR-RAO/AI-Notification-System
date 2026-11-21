@@ -200,10 +200,6 @@
   background-size: 200% 100%;
   animation: ai-shimmer 1.4s linear infinite;
 }
-@media (prefers-reduced-motion: reduce) {
-  .ai-shimmer { animation: none; }
-}
-
 /* ---- Design-system helpers ---- */
 html { color-scheme: light; scroll-behavior: smooth; }
 body { overflow-x: clip; }
@@ -237,7 +233,7 @@ h1, h2, h3, .font-heading { font-family: var(--font-heading); letter-spacing: -0
   background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 30%), var(--glow), transparent 70%);
 }
 .backdrop-spot[data-on='true'] { opacity: 1; }
-@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(3rem, 2rem, 0) scale(1.08); } }
+@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(calc(3rem * var(--motion-scale, 1)), calc(2rem * var(--motion-scale, 1)), 0) scale(1.08); } }
 
 /* ---- Surfaces ---- */
 .grid-surface {
@@ -270,10 +266,10 @@ h1, h2, h3, .font-heading { font-family: var(--font-heading); letter-spacing: -0
 /* ---- Motion helpers (transform / opacity only) ---- */
 @keyframes feed-in { from { opacity: 0; transform: translateY(-12px) scale(0.98); } to { opacity: 1; transform: none; } }
 .feed-in { animation: feed-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(calc(-8px * var(--motion-scale, 1))); } }
 .float-y { animation: float-y 6s ease-in-out infinite; }
 @keyframes marquee { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-.marquee-track { display: flex; width: max-content; animation: marquee var(--marquee-duration, 40s) linear infinite; }
+.marquee-track { display: flex; width: max-content; animation: marquee calc(var(--marquee-duration, 40s) * var(--marquee-slow, 1)) linear infinite; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee { mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
@@ -283,13 +279,11 @@ h1, h2, h3, .font-heading { font-family: var(--font-heading); letter-spacing: -0
 @media (hover: hover) { .btn-lift:hover { transform: translateY(-2px); } }
 .btn-lift:active { transform: scale(0.97); }
 
+/* Reduced motion keeps everything moving but gentler: shorter travel, slower loops, no smooth-scroll. */
+:root { --motion-scale: 1; --marquee-slow: 1; }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-  .backdrop-glow, .marquee-track, .float-y { animation: none !important; }
-  .marquee { mask-image: none; }
-  .marquee-track { width: auto; transform: none; }
-  .marquee-track > div { width: 100%; flex-wrap: wrap; justify-content: center; }
-  .marquee-dup { display: none; }
+  :root { --motion-scale: 0.4; --marquee-slow: 1.8; }
+  html { scroll-behavior: auto; }
 }
 
 /* Toasts: high-contrast tints (WCAG AA) for both themes instead of sonner's default rich colors. */
@@ -306,5 +300,15 @@ h1, h2, h3, .font-heading { font-family: var(--font-heading); letter-spacing: -0
   --warning-bg: oklch(0.29 0.05 85); --warning-border: oklch(0.43 0.09 85); --warning-text: oklch(0.93 0.08 90);
 }
 
-/* Top bars: translucent blur only, so they fade into the global background instead of forming a band */
-.glass-bar { background: color-mix(in oklab, var(--background) 35%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+/* Sticky top bars: nearly solid + blur so page content never shows through; a hairline border appears once the page scrolls */
+.glass-bar {
+  background: color-mix(in oklab, var(--background) 96%, transparent);
+  backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.glass-bar[data-scrolled='true'] { border-bottom-color: var(--border); background: color-mix(in oklab, var(--background) 98%, transparent); }
+
+/* Giant faded wordmark in the footer (pseudo-element text, decorative) */
+.wordmark::before { content: 'Notify'; display: block; font-family: var(--font-heading); font-weight: 700; letter-spacing: -0.04em; line-height: 0.8; font-size: clamp(5rem, 24vw, 17rem); text-align: center; color: transparent;
+  background-image: linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 9%, transparent), transparent 85%); -webkit-background-clip: text; background-clip: text; }

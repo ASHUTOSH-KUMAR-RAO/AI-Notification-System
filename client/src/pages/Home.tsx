@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
@@ -9,24 +9,25 @@ import { RevealWords } from '@/components/motion/RevealWords'
 import { buttonVariants } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { useMotionScale } from '@/lib/motion'
 
 const HEADLINE = [{ text: 'Notifications' }, { text: 'that' }, { text: 'know' }, { text: 'what' }, { text: 'matters', className: 'text-gradient' }]
 
 export default function Home() {
   const { user } = useAuth()
   const page = useRef<HTMLDivElement>(null)
-  const reduce = useReducedMotion()
+  const k = useMotionScale()
   useScrollReveal(page)
   const fade = (delay: number) =>
-    reduce ? {} : { initial: { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const } }
+    ({ initial: { opacity: 0, y: 18 * k }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const } })
 
   return (
     <div ref={page}>
       <Seo description="Notify uses AI to prioritize, filter and group your notifications, then delivers them in real time to the right channel at the right time." />
-      <section className="mx-auto grid w-full max-w-6xl items-center gap-14 px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:grid-cols-2 lg:gap-10 lg:pt-24 lg:pb-24">
+      <section className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 pt-10 pb-8 sm:px-6 sm:pt-14 lg:grid-cols-2 lg:gap-10 lg:pt-20 lg:pb-12">
         <div className="min-w-0 space-y-7">
           <motion.p {...fade(0)} className="glass inline-flex max-w-full items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-medium sm:px-4 sm:text-xs text-muted-foreground shadow-soft">
-            <span aria-hidden className="size-1.5 rounded-full bg-success motion-safe:animate-pulse" />
+            <span aria-hidden className="size-1.5 rounded-full bg-success animate-pulse" />
             AI-powered · Real-time · Multi-channel
           </motion.p>
           <h1 className="text-[2.5rem] leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">

@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { Footer } from '@/components/shell/Footer'
 import { buttonVariants } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
+import { useScrolled } from '@/hooks/useScrolled'
 
 const AUTH_PATHS = ['/login', '/register']
 
@@ -15,12 +16,13 @@ const AUTH_PATHS = ['/login', '/register']
  */
 export function PublicLayout() {
   const { user } = useAuth()
+  const scrolled = useScrolled()
   const { pathname } = useLocation()
   const isAuth = AUTH_PATHS.includes(pathname)
   return (
     <div className="flex min-h-dvh flex-col">
       {!isAuth && (
-        <header className="glass-bar sticky top-0 z-40">
+        <header data-scrolled={scrolled} className="glass-bar sticky top-0 z-40">
           <nav aria-label="Main" className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
             <Logo />
             <div className="flex items-center gap-1 sm:gap-2">

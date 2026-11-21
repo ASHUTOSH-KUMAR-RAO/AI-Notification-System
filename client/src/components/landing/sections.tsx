@@ -48,11 +48,11 @@ const FEATURES: Feature[] = [
 
 export function Features() {
   return (
-    <section id="features" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
+    <section id="features" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-10 sm:px-6 sm:py-16">
       <SectionHead eyebrow="Features" title="Everything between the event and your attention">
         Seven small systems that work together so you only see what matters, when it matters.
       </SectionHead>
-      <div data-stagger className="mt-10 grid gap-4 sm:mt-14 md:grid-cols-4">
+      <div data-stagger className="mt-8 grid gap-4 sm:mt-10 md:grid-cols-4">
         {FEATURES.map(({ icon: Icon, title, text, className, visual }) => (
           <TiltCard key={title} data-reveal className={cn('glass rounded-3xl border p-6 shadow-soft sm:p-7', className ?? 'md:col-span-1')}>
             <span aria-hidden className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -77,9 +77,9 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section id="how" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
+    <section id="how" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-10 sm:px-6 sm:py-16">
       <SectionHead eyebrow="How it works" title="From raw event to the right alert" />
-      <div className="relative mt-10 sm:mt-14">
+      <div className="relative mt-8 sm:mt-10">
         {/* connector: vertical on mobile (through the number badges), horizontal from lg; drawn on scroll */}
         <div aria-hidden className="absolute top-6 bottom-6 left-[1.4rem] w-0.5 bg-border lg:inset-x-[12.5%] lg:top-[1.4rem] lg:bottom-auto lg:left-auto lg:h-0.5 lg:w-auto">
           <span data-line-y className="absolute inset-0 origin-top bg-gradient-to-b from-sea-400 to-aqua lg:hidden" />
@@ -125,11 +125,11 @@ const TICKER = [
 
 export function TechStack() {
   return (
-    <section id="stack" className="w-full scroll-mt-20 py-16 sm:py-24">
+    <section id="stack" className="w-full scroll-mt-20 py-10 sm:py-16">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <SectionHead eyebrow="Built with" title="A modern, boring-in-a-good-way stack" />
       </div>
-      <div data-reveal className="mt-10 space-y-3 sm:mt-14 sm:space-y-4">
+      <div data-reveal className="mt-8 space-y-3 sm:mt-10 sm:space-y-4">
         <Marquee label="Technologies used" duration={45}>
           {STACK.map(({ icon: Icon, name, role }) => (
             <div key={name} className="flex shrink-0 items-center gap-3 rounded-2xl border bg-card/80 px-5 py-4 shadow-soft">
@@ -158,8 +158,8 @@ export function TechStack() {
 
 export function FinalCta({ signedIn }: { signedIn: boolean }) {
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 sm:pb-24">
-      <div data-reveal className="glass relative overflow-hidden rounded-[2rem] border px-6 py-14 text-center shadow-soft sm:px-12 sm:py-20">
+    <section className="mx-auto w-full max-w-6xl px-4 pb-6 sm:px-6 sm:pb-8">
+      <div data-reveal className="glass relative overflow-hidden rounded-[2rem] border px-6 py-12 text-center shadow-soft sm:px-12 sm:py-16">
         <div aria-hidden className="absolute -top-28 left-1/2 size-96 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent)]" />
         <h2 className="relative text-3xl font-bold tracking-tight text-balance sm:text-5xl">Stop drowning in notifications</h2>
         <p className="relative mx-auto mt-4 max-w-xl text-pretty text-muted-foreground sm:text-lg">Let AI sort the signal from the noise. Free to try, takes under a minute.</p>

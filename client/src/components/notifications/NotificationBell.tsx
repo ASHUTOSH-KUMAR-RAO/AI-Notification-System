@@ -32,14 +32,14 @@ export function NotificationBell() {
         {/* key={seq} remounts the icon so the ring animation replays on every new notification */}
         <Bell
           key={`bell-${latest?.seq ?? 0}`}
-          className={cn('size-4 origin-top', latest && 'motion-safe:animate-[bell-ring_0.9s_ease-in-out]')}
+          className={cn('size-4 origin-top', latest && 'animate-[bell-ring_0.9s_ease-in-out]')}
           aria-hidden
         />
         {count > 0 && (
           <span
             key={`badge-${count}`}
             aria-hidden
-            className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-none text-white dark:text-background motion-safe:animate-[badge-pop_0.3s_ease-out]"
+            className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-none text-white dark:text-background animate-[badge-pop_0.3s_ease-out]"
           >
             {count > 99 ? '99+' : count}
           </span>
